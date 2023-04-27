@@ -7,7 +7,7 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Login_Activity extends AppCompatActivity {
+public class loadingActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -21,7 +21,7 @@ public class Login_Activity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(Login_Activity.this, MainActivity.class);
+                                    Intent intent = new Intent(loadingActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }

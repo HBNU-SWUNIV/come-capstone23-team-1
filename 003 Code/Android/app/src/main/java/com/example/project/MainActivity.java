@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    ImageButton map, music, sleep;
+    ImageButton map, music, sleep, schedule;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         map = (ImageButton) findViewById(R.id.Map);
         music = (ImageButton) findViewById(R.id.Music);
         sleep = (ImageButton) findViewById(R.id.Sleep);
+        schedule = (ImageButton) findViewById(R.id.schedule);
 
         map.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MusicActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        schedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScheduleActivity.class);
                 startActivity(intent);
             }
         });
