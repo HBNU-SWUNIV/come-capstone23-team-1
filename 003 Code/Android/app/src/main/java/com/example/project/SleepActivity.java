@@ -1,12 +1,10 @@
 package com.example.project;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +15,7 @@ import java.util.Date;
 
 public class SleepActivity extends AppCompatActivity {
     private Chronometer chronometer;
+    private Button wake_up, pause;
     private long pauseOffset;
     private boolean running;
     long now = System.currentTimeMillis();
@@ -32,11 +31,11 @@ public class SleepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sleeping_layout);
 
-
-        final ImageView img1 = (ImageView) findViewById(R.id.image1);
-
         dateNow = (TextView) findViewById(R.id.dateNow);
         dateNow.setText(formatDate);
+
+        wake_up = (Button) findViewById(R.id.wake_up);
+        pause = (Button) findViewById(R.id.pause);
 
         chronometer = findViewById(R.id.chronometer);
         chronometer.setFormat("%s");
@@ -49,6 +48,20 @@ public class SleepActivity extends AppCompatActivity {
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     Toast.makeText(SleepActivity.this, "이제 스마트폰 화면을 꺼두셔도 됩니다.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        wake_up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -75,9 +88,5 @@ public class SleepActivity extends AppCompatActivity {
         pauseOffset = 0;
     }
 
-    public void OnImage(View v) {
-        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://smart.yuhan.ac.kr"));
-        startActivity(myIntent);
-    }
 
 }

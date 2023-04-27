@@ -24,17 +24,16 @@
             android:background="#000000"
             />
 
-        <!--        <TextClock-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:padding="10dp"-->
-        <!--            android:textSize="30sp"-->
-        <!--            android:format12Hour="HH:mm:ss"-->
-        <!--            android:format24Hour="HH:mm:ss"-->
-        <!--            android:textColor="#00FF00"-->
-        <!--            android:background="#000000"-->
-        <!--            />-->
-
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="30sp"
+            android:format12Hour="HH:mm:ss"
+            android:format24Hour="HH:mm:ss"
+            android:textColor="#00FF00"
+            android:background="#000000"
+        />
     </LinearLayout>
 
     <TextView
@@ -60,27 +59,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ImageView
-        android:id="@+id/image1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="OnImage"
-        app:srcCompat="@drawable/clock" />
-
     <Button
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="수면 시작"
         android:onClick="startChronometer"
-        android:background="#00FF00"
         android:layout_marginBottom="5dp"/>
 
     <Button
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="기상"
-        android:onClick="pauseChronometer"
-        android:background="#FF0000"
+        android:id="@+id/wake_up"
         android:layout_marginBottom="5dp"/>
 
     <Button
@@ -88,9 +78,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:onClick="resetChronometer"
-        android:background="#00BFFF"
         android:text="초기화"
         android:layout_marginBottom="5dp"/>
 
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="중지"
+        android:id="@+id/pause"
+        android:layout_marginBottom="5dp"/>
 
 </LinearLayout>
