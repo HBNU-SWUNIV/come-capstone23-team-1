@@ -70,7 +70,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="기상"
-        android:onClick="pauseChronometer"
+        android:id="@+id/wake_up"
         android:layout_marginBottom="5dp"/>
 
     <Button
