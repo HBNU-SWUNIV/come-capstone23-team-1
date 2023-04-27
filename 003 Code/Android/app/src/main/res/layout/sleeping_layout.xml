@@ -70,7 +70,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="기상"
-        android:id="@+id/wake_up"
+        android:onClick="pauseChronometer"
         android:layout_marginBottom="5dp"/>
 
     <Button
@@ -79,13 +79,6 @@
         android:layout_margin="0dp"
         android:onClick="resetChronometer"
         android:text="초기화"
-        android:layout_marginBottom="5dp"/>
-
-    <Button
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="중지"
-        android:id="@+id/pause"
         android:layout_marginBottom="5dp"/>
 
 </LinearLayout>

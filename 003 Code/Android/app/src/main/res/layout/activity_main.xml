@@ -10,12 +10,12 @@
     tools:layout_editor_absoluteY="0dp">
 
     <ImageButton
-        android:background="#FFFFFF"
         android:id="@+id/Music"
         android:layout_width="138dp"
         android:layout_height="197dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="464dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="432dp"
+        android:background="#FFFFFF"
         android:scaleType="fitCenter"
         android:src="@drawable/record"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,24 +25,35 @@
         android:id="@+id/Sleep"
         android:layout_width="153dp"
         android:layout_height="195dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="204dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="164dp"
         android:src="@drawable/clock"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:background="#FFFFFF"
         android:id="@+id/Map"
         android:layout_width="163dp"
         android:layout_height="200dp"
-        android:layout_marginTop="196dp"
+        android:layout_marginTop="164dp"
+        android:layout_marginEnd="16dp"
+        android:background="#FFFFFF"
         android:scaleType="fitCenter"
         android:src="@drawable/map_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.935"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/schedule"
+        android:layout_width="163dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="56dp"
+        android:background="#FFFFFF"
+        android:scaleType="fitCenter"
+        android:src="@drawable/schedule"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
