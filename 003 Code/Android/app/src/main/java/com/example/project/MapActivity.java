@@ -16,11 +16,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener{
     private MapView mapView;
@@ -70,8 +80,18 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
+        TestApiData apiData = new TestApiData();
+        ArrayList<TestData> dataArr = apiData.getData();
+
+        ArrayList<MapPOIItem> markerArr = new ArrayList<MapPOIItem>();
+        for(TestData data : dataArr){
+            MapPOIItem marker = new MapPOIItem();
+            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(data.getLatitude(), data.getLongitude()));
+            marker.setItemName(data.getName());
+            markerArr.add(marker);
+        }
+        mapView.addPOIItems(markerArr.toArray(new MapPOIItem[markerArr.size()]));
     }
 
     // 권한 체크 이후로직
@@ -163,4 +183,120 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
     }
+}
+
+class TestData{
+    String name;
+    Double latitude;
+    Double longitude;
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setLatitude(Double latitude){
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude){
+        this.longitude = longitude;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public Double getLatitude(){
+        return latitude;
+    }
+
+    public Double getLongitude(){
+        return longitude;
+    }
+
+    @Override
+    public String toString() {
+        return "TestData{" + "name='" + name + '\'' + ", latitude=" + latitude + ", longitude=" + longitude + '}';
+    }
+
+}
+
+class TestApiData{
+    String apiUrl = "https://api.odcloud.kr/api/15081492/v1/uddi:e781ca0c-1ec9-4a31-b769-a0c441137726";
+    String apiKey = "kJYrjKPu%2F%2FvmHy2bjb86lsYBMqShzicBq7Bn%2FO3EwmwNeqg%2BF648td1mkEnZPPIzJqqXyzOHc%2FLBARvOOruhaw%3D%3D";
+
+    public ArrayList<TestData> getData(){
+        ArrayList<TestData> DataArray = new ArrayList<TestData>();
+
+        Thread t = new Thread(){
+            @Override
+            public void run() {
+                try{
+                    String fullurl = apiUrl + "?serviceKey=" + apiKey + "&returnType=XML";
+                    URL url = new URL(fullurl);
+                    InputStream is = url.openStream();
+
+                    XmlPullParserFactory xmlFactory = XmlPullParserFactory.newInstance();
+                    XmlPullParser parser = xmlFactory.newPullParser();
+                    parser.setInput(is, "utf-8");
+
+                    boolean IsName = false;
+                    boolean IsLat = false;
+                    boolean IsLong = false;
+                    String name = "", latitude = "", longitude = "";
+
+                    while(parser.getEventType() != XmlPullParser.END_DOCUMENT){
+                        int type = parser.getEventType();
+                        TestData data = new TestData();
+
+                        if(type == XmlPullParser.START_TAG){
+                            if (parser.getName().equals("col")){
+                                if(parser.getAttributeValue(0).equals("공원명"))
+                                    IsName = true;
+                                else if(parser.getAttributeValue(0).equals("위도"))
+                                    IsLat = true;
+                                else if(parser.getAttributeValue(0).equals("경도"))
+                                    IsLong = true;
+                            }
+                        }else if(type == XmlPullParser.TEXT){
+                            if(IsName){
+                                name = parser.getText();
+                                IsName = false;
+                            }else if(IsLat){
+                                latitude = parser.getText();
+                                IsLat = false;
+                            }else if(IsLong){
+                                longitude = parser.getText();
+                                IsLong = false;
+                            }
+                        }else if(type == XmlPullParser.END_TAG && parser.getName().equals("item")){
+                            data.setName(name);
+                            data.setLatitude(Double.valueOf(latitude));
+                            data.setLongitude(Double.valueOf(longitude));
+
+                            DataArray.add(data);
+                        }
+                        type = parser.next();
+                    }
+                }catch(MalformedURLException e){
+                    e.printStackTrace();
+                }catch(XmlPullParserException e){
+                    e.printStackTrace();
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        try{
+            t.start();
+            t.join();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
+        return DataArray;
+
+    }
+
 }
