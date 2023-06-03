@@ -9,49 +9,124 @@
     tools:layout_editor_absoluteX="195dp"
     tools:layout_editor_absoluteY="0dp">
 
-    <ImageButton
-        android:id="@+id/Music"
-        android:layout_width="138dp"
-        android:layout_height="197dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="432dp"
-        android:background="#FFFFFF"
-        android:scaleType="fitCenter"
-        android:src="@drawable/record"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/Sleep"
-        android:layout_width="153dp"
-        android:layout_height="195dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="164dp"
-        android:src="@drawable/clock"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/Map"
-        android:layout_width="163dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="164dp"
-        android:layout_marginEnd="16dp"
-        android:background="#FFFFFF"
-        android:scaleType="fitCenter"
-        android:src="@drawable/map_icon"
+    <LinearLayout
+        android:layout_width="413dp"
+        android:layout_height="673dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:context=".MainActivity">
 
-    <ImageButton
-        android:id="@+id/schedule"
-        android:layout_width="163dp"
-        android:layout_height="200dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="108dp"
-        android:background="#FFFFFF"
-        android:scaleType="fitCenter"
-        android:src="@drawable/schedule"
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dateNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:padding="10dp"
+                android:textColor="#00FF00"
+                android:textSize="30sp" />
+
+            <TextClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:format12Hour="HH:mm:ss"
+                android:format24Hour="HH:mm:ss"
+                android:padding="10dp"
+                android:textColor="#00FF00"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오늘의 수면시간"
+            android:textColor="#010101"
+            android:textSize="30sp" />
+
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:onClick="startChronometer"
+            android:text="수면 시작" />
+
+        <Button
+            android:id="@+id/wake_up"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="기상" />
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_marginBottom="5dp"
+            android:onClick="resetChronometer"
+            android:text="초기화" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/GraphButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="그래프"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/MapButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/MapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Map"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/CalendarButton" />
+
+    <Button
+        android:id="@+id/CalendarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="일정 관리"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/RecoderButton" />
+
+    <Button
+        android:id="@+id/RecoderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="음성 녹음"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
