@@ -10,15 +10,13 @@
     tools:layout_editor_absoluteY="0dp">
 
     <LinearLayout
-        android:layout_width="413dp"
-        android:layout_height="673dp"
+        android:layout_width="410dp"
+        android:layout_height="648dp"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         tools:context=".MainActivity">
 
 
@@ -98,10 +96,9 @@
         android:id="@+id/GraphButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
+        android:layout_marginStart="16dp"
         android:text="그래프"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/MapButton"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -111,13 +108,14 @@
         android:layout_marginEnd="8dp"
         android:text="Map"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/CalendarButton" />
+        app:layout_constraintEnd_toStartOf="@+id/CalendarButton"
+        app:layout_constraintHorizontal_bias="0.656"
+        app:layout_constraintStart_toEndOf="@+id/GraphButton" />
 
     <Button
         android:id="@+id/CalendarButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="일정 관리"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/RecoderButton" />
