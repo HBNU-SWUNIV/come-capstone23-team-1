@@ -32,8 +32,8 @@
         <activity android:name=".MapActivity" android:label = "map"/>
         <activity android:name=".SleepActivity" android:label = "sleep"/>
         <activity android:name= ".RecoderActivity" android:label = "music"/>
-        <activity android:name= ".ScheduleActivity" android:label = "schedule"/>
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="13a4d6e4ed1c52d18bbc16c6e1e1a59a" />
+        <activity android:name = ".ScheduleActivity" android:label = "schedule"/>
+        <meta-data android:name = "com.kakao.sdk.AppKey" android:value="c54da9cb7faca47278122c7e03881540" />
     </application>
 
 </manifest>
