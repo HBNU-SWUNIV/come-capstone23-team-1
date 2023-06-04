@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button Graph, Map, Calendar, Recoder;
+    Button Graph, Map, Calendar;
     private Chronometer chronometer;
     private Button wake_up;
     private long pauseOffset;
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         Graph = (Button)findViewById(R.id.GraphButton);
         Map = (Button)findViewById(R.id.MapButton);
         Calendar = (Button)findViewById(R.id.CalendarButton);
-        Recoder = (Button)findViewById(R.id.RecoderButton);
 
 
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -70,14 +69,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SleepActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Recoder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RecoderActivity.class);
                 startActivity(intent);
             }
         });
