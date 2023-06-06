@@ -1,53 +1,95 @@
 package com.example.project;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.*;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SleepActivity extends AppCompatActivity {
-    private LineChart sleepChart;
+public class SleepActivity extends AppCompatActivity implements SensorEventListener {
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+
+    private LineChart lineChart;
+    private SleepData sleepData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sleeping_layout);
 
-        sleepChart = findViewById(R.id.sleepChart);
-        drawSleepChart();
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+       lineChart = findViewById(R.id.sleepChart);
+       sleepData = new SleepData();
+
+       Description description = new Description();
+       description.setText("Accelerometer Data");
+       lineChart.setDescription(description);
+       lineChart.invalidate();
     }
 
-    private void drawSleepChart() {
-        List<SleepData> sleepDataList = getSleepDataList(); // 데이터를 가져오는 메서드 호출
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < sleepDataList.size(); i++) {
-            SleepData sleepData = sleepDataList.get(i);
-            entries.add(new Entry(i, sleepData.getSleepTime()));
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            sleepData.setAccelerometerData(x, y, z);
+            sleepData.addDataEntry(sleepData.getEntries().size(), x);
+
+            List<ILineDataSet> dataSets = lineChart.getData().getDataSets();
+            if (dataSets != null && dataSets.size() > 0){
+                LineDataSet set = (LineDataSet) dataSets.get(0);
+                set.setValues(sleepData.getEntries());
+                lineChart.getData().notifyDataChanged();
+                lineChart.notifyDataSetChanged();
+            }else{
+                LineDataSet set = new LineDataSet(sleepData.getEntries(), "Accelerometer Data");
+                set.setColors(ColorTemplate.MATERIAL_COLORS);
+                set.setValueTextColor(Color.BLACK);
+                List<ILineDataSet> dataSetList = new ArrayList<>();
+                dataSetList.add(set);
+                LineData lineData = new LineData(dataSetList);
+                lineChart.setData(lineData);
+            }
+            lineChart.invalidate();
         }
-
-        LineDataSet dataSet = new LineDataSet(entries, "수면 시간");
-        LineData lineData = new LineData(dataSet);
-
-        sleepChart.setData(lineData);
-        sleepChart.invalidate();
     }
 
-    private List<SleepData> getSleepDataList() {
-        // 수면 데이터를 가져오는 로직을 구현합니다.
-        // 예시로 임시 데이터를 반환하도록 하겠습니다.
-        List<SleepData> sleepDataList = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            sleepDataList.add(new SleepData("2023-06-01", i));
-        }
-
-        return sleepDataList;
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // 가속도 센서 정확도 변경 시 처리할 로직을 구현 (필요한 경우)
     }
+
 }
