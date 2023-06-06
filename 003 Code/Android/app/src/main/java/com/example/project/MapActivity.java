@@ -80,6 +80,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
         mapView.setMapViewEventListener(this);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
         TestApiData apiData = new TestApiData();
         ArrayList<TestData> dataArr = apiData.getData();

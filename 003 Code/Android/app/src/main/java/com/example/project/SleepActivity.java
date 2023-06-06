@@ -1,76 +1,53 @@
 package com.example.project;
 
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SleepActivity extends AppCompatActivity {
-    private Chronometer chronometer;
-    private Button wake_up;
-    private long pauseOffset;
-    private boolean running;
-    long now = System.currentTimeMillis();
-    Date date = new Date(now);
-    SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd");
-    String formatDate = sdfNow.format(date);
-
-    TextView dateNow;
-
+    private LineChart sleepChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sleeping_layout);
 
-        dateNow = (TextView) findViewById(R.id.dateNow);
-        dateNow.setText(formatDate);
-
-        chronometer = findViewById(R.id.chronometer);
-        chronometer.setFormat("%s");
-        chronometer.setBase(SystemClock.elapsedRealtime());
-
-        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-           public void onChronometerTick(Chronometer chronometer) {
-                if ((SystemClock.elapsedRealtime() -  chronometer.getBase()) >= 10000) {
-                    chronometer.setBase(SystemClock.elapsedRealtime());
-                    Toast.makeText(SleepActivity.this, "이제 스마트폰 화면을 꺼두셔도 됩니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+        sleepChart = findViewById(R.id.sleepChart);
+        drawSleepChart();
     }
 
+    private void drawSleepChart() {
+        List<SleepData> sleepDataList = getSleepDataList(); // 데이터를 가져오는 메서드 호출
 
-    public void startChronometer(View v) {
-        if (!running) {
-            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
-            chronometer.start();
-            running = true;
+        ArrayList<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < sleepDataList.size(); i++) {
+            SleepData sleepData = sleepDataList.get(i);
+            entries.add(new Entry(i, sleepData.getSleepTime()));
         }
+
+        LineDataSet dataSet = new LineDataSet(entries, "수면 시간");
+        LineData lineData = new LineData(dataSet);
+
+        sleepChart.setData(lineData);
+        sleepChart.invalidate();
     }
 
-    public void pauseChronometer(View v) {
-        if (running) {
-            chronometer.stop();
-            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
-            running = false;
+    private List<SleepData> getSleepDataList() {
+        // 수면 데이터를 가져오는 로직을 구현합니다.
+        // 예시로 임시 데이터를 반환하도록 하겠습니다.
+        List<SleepData> sleepDataList = new ArrayList<>();
+        for(int i=0;i<10;i++){
+            sleepDataList.add(new SleepData("2023-06-01", i));
         }
+
+        return sleepDataList;
     }
-
-    public void resetChronometer(View v) {
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        pauseOffset = 0;
-    }
-
-
 }
