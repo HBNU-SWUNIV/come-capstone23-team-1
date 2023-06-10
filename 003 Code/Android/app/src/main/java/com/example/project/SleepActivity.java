@@ -1,12 +1,14 @@
 package com.example.project;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,23 +28,51 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
     private SensorManager sensorManager;
     private Sensor accelerometer;
 
+    private List<Long> sleepTimes;
+    private Long startTime, endTime;
+    private Long SleepTime;
+    private int s;
     private LineChart lineChart;
     private SleepData sleepData;
+    private int currentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sleeping_layout);
 
+        Intent intent = getIntent();
+        startTime = intent.getLongExtra("시작", 0) / 1000;
+        endTime = intent.getLongExtra("종료", 0) / 1000;
+        SleepTime = intent.getLongExtra("수면", 0);
+
+        String a = String.valueOf(startTime);
+        String b = String.valueOf(SleepTime);
+        String c = String.valueOf(endTime);
+        Log.d("startTime : "+ a, "sleepTime = " + b);
+        Log.d( "endTime = ", c);
+
+
+        sleepTimes = new ArrayList<>();
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
        lineChart = findViewById(R.id.sleepChart);
        sleepData = new SleepData();
+       currentIndex = 0;
 
        Description description = new Description();
        description.setText("Accelerometer Data");
        lineChart.setDescription(description);
+
+       List<Entry> initialEntries = new ArrayList<>();
+       LineDataSet initialDataSet = new LineDataSet(initialEntries, "Accelerometer Data");
+       initialDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+       initialDataSet.setValueTextColor(Color.BLACK);
+       LineData initialLineData = new LineData(initialDataSet);
+       lineChart.setData(initialLineData);
+
        lineChart.invalidate();
     }
 
@@ -60,30 +90,23 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
 
-            sleepData.setAccelerometerData(x, y, z);
-            sleepData.addDataEntry(sleepData.getEntries().size(), x);
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 
-            List<ILineDataSet> dataSets = lineChart.getData().getDataSets();
-            if (dataSets != null && dataSets.size() > 0){
-                LineDataSet set = (LineDataSet) dataSets.get(0);
-                set.setValues(sleepData.getEntries());
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
+
+                sleepData.setAccelerometerData(x, y, z);
+                sleepData.addDataEntry(x);
+
+                LineDataSet dataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
+                dataSet.setValues(sleepData.getEntries());
                 lineChart.getData().notifyDataChanged();
                 lineChart.notifyDataSetChanged();
-            }else{
-                LineDataSet set = new LineDataSet(sleepData.getEntries(), "Accelerometer Data");
-                set.setColors(ColorTemplate.MATERIAL_COLORS);
-                set.setValueTextColor(Color.BLACK);
-                List<ILineDataSet> dataSetList = new ArrayList<>();
-                dataSetList.add(set);
-                LineData lineData = new LineData(dataSetList);
-                lineChart.setData(lineData);
-            }
-            lineChart.invalidate();
+
+                lineChart.invalidate();
+
         }
     }
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SleepData {
+    private long startTime;
     private long timestamp; // 수면 데이터의 타임스탬프
     private float accelerometerX; // 가속도 센서 X 축 값
     private float accelerometerY; // 가속도 센서 Y 축 값
@@ -28,8 +29,12 @@ public class SleepData {
         this.timestamp = timestamp;
     }
 
-    public void addDataEntry(int index, float value){
-        entries.add(new Entry(index, value));
+    public void setStartTime(long startTime){
+        this.startTime = startTime;
+    }
+
+    public void addDataEntry(float x){
+        entries.add(new Entry(entries.size(), x));
     }
 
     public List<Entry> getEntries(){

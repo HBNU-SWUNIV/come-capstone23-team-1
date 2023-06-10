@@ -1,12 +1,16 @@
 package com.example.project;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ImageButton;
+import android.hardware.*;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,12 +18,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     Button Graph, Map, Calendar;
     private Chronometer chronometer;
-    private Button wake_up;
+    private SensorManager sensorManager;
+
+    private long startTime;
+    private long endTime;
+    private long sleepTime;
+
     private long pauseOffset;
     private boolean running;
     long now = System.currentTimeMillis();
@@ -68,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SleepActivity.class);
+                intent.putExtra("시작", startTime);
+                intent.putExtra("종료", endTime);
+                intent.putExtra("수면", sleepTime);
                 startActivity(intent);
             }
         });
@@ -83,11 +96,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     public void startChronometer(View v) {
         if (!running) {
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             running = true;
+            startTime = System.currentTimeMillis();
         }
     }
 
@@ -96,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
+            endTime = System.currentTimeMillis();
+            sleepTime = (endTime - startTime) / 1000;
         }
     }
 
