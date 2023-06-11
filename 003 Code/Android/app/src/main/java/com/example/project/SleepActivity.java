@@ -10,6 +10,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -27,6 +29,7 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
+    private boolean isGraphDrawingEnabled = true;
 
     private List<Long> sleepTimes;
     private Long startTime, endTime;
@@ -34,7 +37,7 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
     private int s;
     private LineChart lineChart;
     private SleepData sleepData;
-    private int currentIndex;
+    Button stopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,15 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
 
        lineChart = findViewById(R.id.sleepChart);
        sleepData = new SleepData();
-       currentIndex = 0;
+       stopButton = (Button)findViewById(R.id.stopButton);
+
+       stopButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               isGraphDrawingEnabled = !isGraphDrawingEnabled; // 그래프 그리는 동작 활성화/비활성화 전환
+
+           }
+       });
 
        Description description = new Description();
        description.setText("Accelerometer Data");
@@ -91,7 +102,7 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+        if (isGraphDrawingEnabled && event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
 
                 float x = event.values[0];
                 float y = event.values[1];
@@ -106,7 +117,6 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
                 lineChart.notifyDataSetChanged();
 
                 lineChart.invalidate();
-
         }
     }
 
