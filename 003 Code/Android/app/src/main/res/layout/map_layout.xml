@@ -6,4 +6,38 @@
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/imageInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/information"
+            android:layout_alignParentLeft="true"
+            android:padding="16dp" />
+
+        <ImageView
+            android:id="@+id/imageSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/map_icon"
+            android:layout_centerHorizontal="true"
+            android:padding="16dp" />
+
+        <ImageView
+            android:id="@+id/imageMemo"
+            android:layout_width="253dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="-126dp"
+            android:padding="16dp"
+            android:src="@drawable/memo" />
+
+    </RelativeLayout>
 </RelativeLayout>
