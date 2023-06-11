@@ -12,7 +12,6 @@ public class SleepData {
     private float accelerometerY; // 가속도 센서 Y 축 값
     private float accelerometerZ; // 가속도 센서 Z 축 값
     private List<Entry> entries;
-    // 생성자, getter, setter 등 필요한 메서드들...
 
     public SleepData(){
         entries = new ArrayList<>();
