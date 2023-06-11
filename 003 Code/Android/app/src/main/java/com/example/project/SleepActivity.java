@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private boolean isGraphDrawingEnabled = true;
+
+
 
     private List<Long> sleepTimes;
     private Long startTime, endTime;

@@ -1,5 +1,6 @@
 package com.example.project;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -8,8 +9,16 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.Manifest;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +44,7 @@ import java.util.ArrayList;
 public class MapActivity extends AppCompatActivity implements MapView.CurrentLocationEventListener, MapView.MapViewEventListener{
     private MapView mapView;
     private ViewGroup mapViewContainer;
+    private ImageView Memo, Search, information;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +85,7 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
             return;
         }
 
+
         //맵 뷰 띄우는 코드
         mapView = new MapView(this);
         mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
@@ -82,18 +93,19 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
         mapView.setMapViewEventListener(this);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
 
-        TestApiData apiData = new TestApiData();
-        ArrayList<TestData> dataArr = apiData.getData();
+        Memo = (ImageView)findViewById(R.id.imageMemo);
+        Search = (ImageView)findViewById(R.id.imageSearch);
+        information = (ImageView) findViewById(R.id.imageInfo);
 
-        ArrayList<MapPOIItem> markerArr = new ArrayList<MapPOIItem>();
-        for(TestData data : dataArr){
-            MapPOIItem marker = new MapPOIItem();
-            marker.setMapPoint(MapPoint.mapPointWithGeoCoord(data.getLatitude(), data.getLongitude()));
-            marker.setItemName(data.getName());
-            markerArr.add(marker);
-        }
-        mapView.addPOIItems(markerArr.toArray(new MapPOIItem[markerArr.size()]));
+        Search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapActivity.this, MapSearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     // 권한 체크 이후로직
     @Override

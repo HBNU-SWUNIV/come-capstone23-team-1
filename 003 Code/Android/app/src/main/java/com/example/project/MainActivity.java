@@ -58,15 +58,12 @@ public class MainActivity extends AppCompatActivity {
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
-                if ((SystemClock.elapsedRealtime() - chronometer.getBase()) <= 1000) {
-                    Toast.makeText(MainActivity.this, "이제 스마트폰 화면을 꺼두셔도 됩니다.", Toast.LENGTH_SHORT).show();
-                }
-
                 long time = SystemClock.elapsedRealtime() - chronometer.getBase();
                 int h = (int)(time / 36000000);
                 int m = (int)(time - h*36000000)/60000;
                 int s = (int)(time - h*36000000 - m*60000) / 1000;
                 String t = (h < 10 ? "0"+h: h)+":" + (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s: s);
+
                 chronometer.setText(t);
             }
         });
@@ -127,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     public void resetChronometer(View v) {
         chronometer.setBase(SystemClock.elapsedRealtime());
         pauseOffset = 0;
+        chronometer.setText("00:00:00");
     }
 
 }
