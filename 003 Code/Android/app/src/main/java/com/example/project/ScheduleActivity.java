@@ -140,7 +140,7 @@ public class ScheduleActivity extends AppCompatActivity{
         }
     }
 
-    @SuppressLint("WrongConstant")
+
     public void removeDiary(String readDay)
     {
         FileOutputStream fos = null;
@@ -158,7 +158,7 @@ public class ScheduleActivity extends AppCompatActivity{
         }
     }
 
-    @SuppressLint("WrongConstant")
+
     public void saveDiary(String readDay)
     {
         FileOutputStream fos = null;
