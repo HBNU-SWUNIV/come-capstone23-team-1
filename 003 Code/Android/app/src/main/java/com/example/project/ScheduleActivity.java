@@ -122,14 +122,15 @@ public class ScheduleActivity extends AppCompatActivity{
                     removeDiary(readDay);
                 }
             });
-            if (textView2.getText() == null)
-            {
+            if (str.isEmpty()) {
                 textView2.setVisibility(View.INVISIBLE);
                 diaryTextView.setVisibility(View.VISIBLE);
                 save_Btn.setVisibility(View.VISIBLE);
                 cha_Btn.setVisibility(View.INVISIBLE);
                 del_Btn.setVisibility(View.INVISIBLE);
                 contextEditText.setVisibility(View.VISIBLE);
+            }else{
+                diaryTextView.setVisibility(View.INVISIBLE);
             }
 
         }
