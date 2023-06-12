@@ -18,9 +18,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
 class MemoItem {
@@ -175,11 +180,13 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         ArrayList<MemoItem> list = new ArrayList<>();
 
         // sample items
-        MemoItem item1 = new MemoItem("일상", "오늘 점심은 김태훈과 함께할 것");
+        MemoItem item1 = new MemoItem("일상", "오늘 점심은 OOO과 함께할 것");
         MemoItem item2 = new MemoItem("회사", "오후 2시에 팀 회의가 있으니 관련 서류 준비");
+        MemoItem item3 = new MemoItem("일상", "아 자고 싶어라");
 
         list.add(item1);
         list.add(item2);
+        list.add(item3);
 
         return list;
     }
@@ -203,6 +210,8 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
         addMemoItem(category, memo);
 
+        loadDataFromFile();
+
         categorySpinner.setSelection(0);
         memoEdit.setText("");
 
@@ -224,5 +233,33 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         MemoItem item = new MemoItem(category, memo);
 
         memoListAdapter.addItem(item);
+    }
+
+    private void saveDataToFile(String data) {
+        try {
+            File file = new File(getFilesDir(), "file:///android_asset/memo_data.txt");
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(data.getBytes());
+            fos.close();
+            // 저장 완료 메시지 등의 처리
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 저장 실패 처리
+        }
+    }
+
+    private String loadDataFromFile() {
+        try {
+            File file = new File(getFilesDir(), "file:///android_asset/memo_data.txt");
+            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer = new byte[(int) file.length()];
+            fis.read(buffer);
+            fis.close();
+            return new String(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // 데이터 불러오기 실패 처리
+        }
+        return null;
     }
 }
