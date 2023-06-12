@@ -112,6 +112,14 @@ public class MapActivity extends AppCompatActivity implements MapView.CurrentLoc
                 startActivity(intent);
             }
         });
+
+        Memo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapActivity.this, MemoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
