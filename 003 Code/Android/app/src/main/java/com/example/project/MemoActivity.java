@@ -3,6 +3,7 @@ package com.example.project;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,7 +155,6 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
         Button registerButton = findViewById(R.id.register);
         registerButton.setOnClickListener(this);
-
         memoList = findViewById(R.id.recyclerView);
 
         setRecyclerView();
@@ -172,21 +172,35 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
     // 리사이클러뷰에 아이템 지정, 설정할 더미 아이템은 getMemoList에서 생성
     private void setMemoListItem () {
-        ArrayList<MemoItem> list = getMemoDummyList();
-        memoListAdapter.addItemList(list);
+        String data = loadDataFromFile();
+        if(data != null){
+            ArrayList<MemoItem> list = getMemoDummyList(data);
+            memoListAdapter.addItemList(list);
+        }
     }
 
-    private ArrayList<MemoItem> getMemoDummyList() {
+    // 파일에서 읽은 데이터를 MemoItem 리스트로 변환하는 메서드
+
+    private ArrayList<MemoItem> getMemoDummyList(String data) {
         ArrayList<MemoItem> list = new ArrayList<>();
+        String[] lines = data.split(System.getProperty("line.separator"));
+
+        for(String line : lines){
+            String[] items = line.split(",");
+            if(items.length == 3){
+                String category = items[0];
+                String memo = items[1];
+                MemoItem item = new MemoItem(category, memo);
+                list.add(item);
+            }
+        }
 
         // sample items
         MemoItem item1 = new MemoItem("일상", "오늘 점심은 OOO과 함께할 것");
         MemoItem item2 = new MemoItem("회사", "오후 2시에 팀 회의가 있으니 관련 서류 준비");
-        MemoItem item3 = new MemoItem("일상", "아 자고 싶어라");
 
         list.add(item1);
         list.add(item2);
-        list.add(item3);
 
         return list;
     }
@@ -208,9 +222,8 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
             return;
         }
 
+        saveDataToFile(memo);
         addMemoItem(category, memo);
-
-        loadDataFromFile();
 
         categorySpinner.setSelection(0);
         memoEdit.setText("");
@@ -236,30 +249,56 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     }
 
     private void saveDataToFile(String data) {
+        File file = new File(getFilesDir(), "hello.txt");
+        FileOutputStream fos = null;
         try {
-            File file = new File(getFilesDir(), "file:///android_asset/memo_data.txt");
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file, true);
             fos.write(data.getBytes());
-            fos.close();
             // 저장 완료 메시지 등의 처리
+            Log.d("저장:", "저장 완료!!");
         } catch (IOException e) {
             e.printStackTrace();
             // 저장 실패 처리
+        }finally{
+            try{
+                if(fos != null){
+                    fos.close();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
     private String loadDataFromFile() {
+        File file = new File(getFilesDir(), "hello.txt");
+        if(!file.exists()){
+            Log.d("로드:", "파일이 존재하지 않습니다.");
+            return null;
+        }
+        
+        FileInputStream fis = null;
         try {
-            File file = new File(getFilesDir(), "file:///android_asset/memo_data.txt");
-            FileInputStream fis = new FileInputStream(file);
+            fis = new FileInputStream(file);
             byte[] buffer = new byte[(int) file.length()];
             fis.read(buffer);
-            fis.close();
+            Log.d("로드:", "로딩 완료");
+
             return new String(buffer);
         } catch (IOException e) {
             e.printStackTrace();
             // 데이터 불러오기 실패 처리
+        }finally{
+            try{
+                if(fis != null){
+                    fis.close();
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
+
+
         return null;
     }
 }
