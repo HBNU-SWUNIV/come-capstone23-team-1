@@ -185,22 +185,18 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         ArrayList<MemoItem> list = new ArrayList<>();
         String[] lines = data.split(System.getProperty("line.separator"));
 
-        for(String line : lines){
+        Log.d("저장된 내용 :", data);
+
+        for (String line : lines) {
             String[] items = line.split(",");
-            if(items.length == 3){
-                String category = items[0];
-                String memo = items[1];
+            if (items.length == 2) {
+                String category = items[0].trim();
+                String memo = items[1].trim();
                 MemoItem item = new MemoItem(category, memo);
                 list.add(item);
             }
         }
 
-        // sample items
-        MemoItem item1 = new MemoItem("일상", "오늘 점심은 OOO과 함께할 것");
-        MemoItem item2 = new MemoItem("회사", "오후 2시에 팀 회의가 있으니 관련 서류 준비");
-
-        list.add(item1);
-        list.add(item2);
 
         return list;
     }
@@ -222,7 +218,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        saveDataToFile(memo);
+        saveDataToFile(category, memo);
         addMemoItem(category, memo);
 
         categorySpinner.setSelection(0);
@@ -248,23 +244,25 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         memoListAdapter.addItem(item);
     }
 
-    private void saveDataToFile(String data) {
+    private void saveDataToFile(String category, String memo) {
         File file = new File(getFilesDir(), "saveFile.txt");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file, true);
+            String data = category + "," + memo + System.getProperty("line.separator");
             fos.write(data.getBytes());
             // 저장 완료 메시지 등의 처리
             Log.d("저장:", "저장 완료!!");
         } catch (IOException e) {
             e.printStackTrace();
             // 저장 실패 처리
-        }finally{
-            try{
-                if(fos != null){
+            Log.e("SaveDataToFile", "Error saving data: " + e.getMessage());
+        } finally {
+            try {
+                if (fos != null) {
                     fos.close();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -272,32 +270,30 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
     private String loadDataFromFile() {
         File file = new File(getFilesDir(), "saveFile.txt");
-        if(!file.exists()){
-            Log.d("로드:", "파일이 존재하지 않습니다.");
+        if (!file.exists()) {
+            Log.d("LoadDataFromFile", "File does not exist.");
             return null;
         }
-        
+
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(file);
             byte[] buffer = new byte[(int) file.length()];
             fis.read(buffer);
-            Log.d("로드:", "로딩 완료");
-
+            Log.d("LoadDataFromFile", "Data loaded successfully!");
             return new String(buffer);
         } catch (IOException e) {
             e.printStackTrace();
-            // 데이터 불러오기 실패 처리
-        }finally{
-            try{
-                if(fis != null){
+            Log.e("LoadDataFromFile", "Error loading data: " + e.getMessage());
+        } finally {
+            try {
+                if (fis != null) {
                     fis.close();
                 }
-            }catch(Exception e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
 
         return null;
     }
