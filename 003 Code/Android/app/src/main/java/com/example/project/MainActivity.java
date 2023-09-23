@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button Graph, Map, Calendar;
+    Button Graph, Memo, Calendar;
     private Chronometer chronometer;
 
     private long startTime;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Graph = (Button)findViewById(R.id.GraphButton);
-        Map = (Button)findViewById(R.id.MapButton);
+        Memo = (Button)findViewById(R.id.MemoButton);
         Calendar = (Button)findViewById(R.id.CalendarButton);
 
 
@@ -71,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.setText("00:00:00");
 
-        Map.setOnClickListener(new View.OnClickListener() {
+        Memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                Intent intent = new Intent(MainActivity.this, MemoActivity.class);
                 startActivity(intent);
             }
         });

@@ -249,7 +249,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     }
 
     private void saveDataToFile(String data) {
-        File file = new File(getFilesDir(), "hello.txt");
+        File file = new File(getFilesDir(), "saveFile.txt");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file, true);
@@ -271,7 +271,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     }
 
     private String loadDataFromFile() {
-        File file = new File(getFilesDir(), "hello.txt");
+        File file = new File(getFilesDir(), "saveFile.txt");
         if(!file.exists()){
             Log.d("로드:", "파일이 존재하지 않습니다.");
             return null;

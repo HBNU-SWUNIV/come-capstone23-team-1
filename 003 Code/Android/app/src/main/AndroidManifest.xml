@@ -4,6 +4,8 @@
     package="com.example.project">
 
     <!-- 권한 추가 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -33,11 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapActivity" android:label = "map"/>
         <activity android:name=".SleepActivity" android:label = "sleep"/>
         <activity android:name = ".ScheduleActivity" android:label = "schedule"/>
-        <activity android:name= ".MapSearchActivity" android:label = "Search"/>
-        <activity android:name= ".InfoActivity" android:label = "information" />
         <activity android:name= ".MemoActivity" android:label = "Memo"/>
         <meta-data android:name = "com.kakao.sdk.AppKey" android:value="c54da9cb7faca47278122c7e03881540" />
     </application>
