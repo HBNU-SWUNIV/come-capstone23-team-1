@@ -22,7 +22,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="피로도 관리 앱"
+        android:label="도우미 앱"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
