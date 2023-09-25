@@ -1,6 +1,9 @@
 package com.example.project;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,18 +19,27 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 class MemoItem {
     public String category;
@@ -54,7 +66,7 @@ class MemoItem {
 class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHolder> {
     private Context context;
     private int resource;
-    private ArrayList<MemoItem> itemList;
+    public ArrayList<MemoItem> itemList;
 
     // MemoListAdapter 생성자
     public MemoListAdapter(Context context, int resource, ArrayList<MemoItem> itemList) {
@@ -77,6 +89,8 @@ class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHolder> {
         this.itemList.addAll(itemList);
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public int getItemCount(){
@@ -156,10 +170,12 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         Button registerButton = findViewById(R.id.register);
         registerButton.setOnClickListener(this);
         memoList = findViewById(R.id.recyclerView);
+        DeleteMemoListItem(memoList);
 
         setRecyclerView();
         setMemoListItem();
     }
+
 
     // 리사이클러뷰 설정: 레이아웃 매니저, 어댑터 설정
     private void setRecyclerView() {
@@ -178,6 +194,64 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
             memoListAdapter.addItemList(list);
         }
     }
+
+    private void removeMemoItem(String category, String memo){
+        for(int i = 0; i < memoListAdapter.itemList.size(); i++){
+            MemoItem item = memoListAdapter.itemList.get(i);
+            if(item.category.equals(category) && item.memo.equals(memo)){
+                memoListAdapter.itemList.remove(i);
+                memoListAdapter.notifyItemRemoved(i);
+                break;
+            }
+        }
+
+        deleteDataFromFile(category, memo);
+    }
+
+    private void DeleteMemoListItem(RecyclerView recyclerview){
+        String data = loadDataFromFile();
+
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0,  ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // Take action for the swiped item
+
+                if(direction == ItemTouchHelper.LEFT){
+                    int position = viewHolder.getAdapterPosition();
+                    MemoItem deleteItem = memoListAdapter.itemList.get(position);
+
+                    memoListAdapter.itemList.remove(deleteItem);
+                    memoListAdapter.notifyItemRemoved(position);
+
+                    String category = deleteItem.category;
+                    String memo = deleteItem.memo;
+                    removeMemoItem(category, memo);
+                }
+            }
+
+            public void onChildDraw (Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,float dX, float dY,int actionState, boolean isCurrentlyActive){
+
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeLeftBackgroundColor(Color.RED)
+                        .addSwipeLeftActionIcon(R.drawable.ic_delete)
+                        .addSwipeLeftLabel("삭제")
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerview);
+    }
+
+
 
     // 파일에서 읽은 데이터를 MemoItem 리스트로 변환하는 메서드
 
@@ -297,4 +371,58 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
         return null;
     }
+
+
+    private void deleteDataFromFile(String category, String memo) {
+        File file = new File(getFilesDir(), "saveFile.txt");
+        if (!file.exists()) {
+            Log.d("deleteDataFromFile", "File does not exist.");
+            return;
+        }
+
+        FileInputStream fis = null;
+        BufferedReader reader = null;
+        FileWriter writer = null;
+
+        try {
+            fis = new FileInputStream(file);
+            reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            StringBuilder updatedData = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                String[] items = line.split(",");
+                if (items.length == 2) {
+                    String storedCategory = items[0].trim();
+                    String storedMemo = items[1].trim();
+                    if (!storedCategory.equals(category) || !storedMemo.equals(memo)) {
+                        updatedData.append(line).append(System.getProperty("line.separator"));
+                    }
+                }
+            }
+
+            writer = new FileWriter(file);
+            writer.write(updatedData.toString());
+            writer.flush();
+            Log.d("deleteDataFromFile", "Data deleted successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("deleteDataFromFile", "Error deleting data: " + e.getMessage());
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (reader != null) {
+                    reader.close();
+                }
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
