@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         chronometer = findViewById(R.id.chronometer);
 
-
         Graph = (Button)findViewById(R.id.GraphButton);
         Memo = (Button)findViewById(R.id.MemoButton);
         Calendar = (Button)findViewById(R.id.CalendarButton);
@@ -71,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.setText("00:00:00");
 
+        Graph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SleepActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,16 +86,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Graph.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SleepActivity.class);
-                intent.putExtra("시작", startTime);
-                intent.putExtra("종료", endTime);
-                intent.putExtra("수면", sleepTime);
-                startActivity(intent);
-            }
-        });
 
         Calendar.setOnClickListener(new View.OnClickListener() {
             @Override

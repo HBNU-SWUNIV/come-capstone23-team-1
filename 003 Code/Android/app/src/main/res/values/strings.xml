@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Simple Memo App</string>
-    <string name="app_company">CHERRY</string>
 
     <string name="button_register">등록</string>
 

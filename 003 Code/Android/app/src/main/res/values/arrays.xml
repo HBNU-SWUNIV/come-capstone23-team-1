@@ -2,7 +2,8 @@
 <resources>
     <array name="category">
         <item>일상</item>
-        <item>회사</item>
+        <item>독서</item>
+        <item>공부</item>
         <item>기타</item>
     </array>
 
