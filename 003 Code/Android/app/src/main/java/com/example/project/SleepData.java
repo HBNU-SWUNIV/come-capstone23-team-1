@@ -23,6 +23,12 @@ public class SleepData {
         this.accelerometerZ = z;
     }
 
+    public void clear(){
+        this.accelerometerX = 0.0f;
+        this.accelerometerY = 0.0f;
+        this.accelerometerZ = 0.0f;
+    }
+
     // 타임스탬프 설정 메서드
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
@@ -36,6 +42,10 @@ public class SleepData {
         entries.add(new Entry(entries.size(), x));
     }
 
+    public void RemoveDataEntry()
+    {
+        entries.clear();
+    }
     public List<Entry> getEntries(){
         return entries;
     }

@@ -1,7 +1,9 @@
 package com.example.project;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,8 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -37,10 +41,9 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
     private List<Long> sleepTimes;
     private Long startTime, endTime;
     private Long SleepTime;
-    private int s;
     private LineChart lineChart;
     private SleepData sleepData;
-    Button stopButton;
+    Button stopButton, clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +70,35 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
        lineChart = findViewById(R.id.sleepChart);
        sleepData = new SleepData();
        stopButton = (Button)findViewById(R.id.stopButton);
+       clearButton = (Button)findViewById(R.id.clearButton);
+
+       if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED){
+           ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 1);
+       }
 
        stopButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                isGraphDrawingEnabled = !isGraphDrawingEnabled; // 그래프 그리는 동작 활성화/비활성화 전환
 
+           }
+       });
+
+       clearButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               // 그래프 데이터 초기화
+               List<Entry> emptyEntries = new ArrayList<>();
+               LineDataSet emptyDataSet = new LineDataSet(emptyEntries, "Accelerometer Data");
+               emptyDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+               emptyDataSet.setValueTextColor(Color.BLACK);
+               LineData emptyLineData = new LineData(emptyDataSet);
+               lineChart.setData(emptyLineData);
+
+               sleepData.RemoveDataEntry();
+
+               lineChart.setDescription(null); // 초기 설명(Description) 제거
+               lineChart.invalidate();
            }
        });
 
@@ -120,6 +146,22 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
                 lineChart.notifyDataSetChanged();
 
                 lineChart.invalidate();
+
+            // 여기에서 가속도 데이터를 분석하고 수면 패턴을 확인할 수 있습니다.
+            // 예를 들어, 특정 조건을 충족하면 수면 상태를 변경하거나 저장할 수 있습니다.
+            // 이 부분에 심층적인 수면 분석 알고리즘을 구현해야 합니다.
+
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //권한이 승인될 때 실행할 코드 추가
+            }
         }
     }
 
