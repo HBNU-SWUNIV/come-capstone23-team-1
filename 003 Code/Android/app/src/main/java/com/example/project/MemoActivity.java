@@ -189,7 +189,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     // 리사이클러뷰에 아이템 지정, 설정할 더미 아이템은 getMemoList에서 생성
     private void setMemoListItem () {
         String data = loadDataFromFile();
-        if(data != null){
+        if (data != null){
             ArrayList<MemoItem> list = getMemoDummyList(data);
             memoListAdapter.addItemList(list);
         }
@@ -209,8 +209,6 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     }
 
     private void DeleteMemoListItem(RecyclerView recyclerview){
-        String data = loadDataFromFile();
-
         ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0,  ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -262,7 +260,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         Log.d("저장된 내용 :", data);
 
         for (String line : lines) {
-            String[] items = line.split(",");
+            String[] items = line.split(";");
             if (items.length == 2) {
                 String category = items[0].trim();
                 String memo = items[1].trim();
@@ -323,7 +321,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(file, true);
-            String data = category + "," + memo + System.getProperty("line.separator");
+            String data = category + ";" + memo + System.getProperty("line.separator");
             fos.write(data.getBytes());
             // 저장 완료 메시지 등의 처리
             Log.d("저장:", "저장 완료!!");
