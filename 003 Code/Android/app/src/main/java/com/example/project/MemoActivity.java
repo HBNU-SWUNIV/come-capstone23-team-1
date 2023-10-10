@@ -389,7 +389,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
             StringBuilder updatedData = new StringBuilder();
 
             while ((line = reader.readLine()) != null) {
-                String[] items = line.split(",");
+                String[] items = line.split(";");
                 if (items.length == 2) {
                     String storedCategory = items[0].trim();
                     String storedMemo = items[1].trim();
