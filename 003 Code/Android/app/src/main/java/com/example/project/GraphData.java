@@ -5,7 +5,7 @@ import com.github.mikephil.charting.data.Entry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SleepData {
+public class GraphData {
     private long startTime;
     private long timestamp; // 수면 데이터의 타임스탬프
     private float accelerometerX; // 가속도 센서 X 축 값
@@ -13,7 +13,7 @@ public class SleepData {
     private float accelerometerZ; // 가속도 센서 Z 축 값
     private List<Entry> entries;
 
-    public SleepData(){
+    public GraphData(){
         entries = new ArrayList<>();
     }
     // 가속도 센서 데이터 저장 메서드

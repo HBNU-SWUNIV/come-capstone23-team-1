@@ -2,7 +2,6 @@ package com.example.project;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -10,8 +9,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,52 +20,33 @@ import androidx.core.content.ContextCompat;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.*;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SleepActivity extends AppCompatActivity implements SensorEventListener {
+public class GraphActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private boolean isGraphDrawingEnabled = true;
 
 
-
-    private List<Long> sleepTimes;
-    private Long startTime, endTime;
-    private Long SleepTime;
     private LineChart lineChart;
-    private SleepData sleepData;
+    private GraphData graphData;
     Button stopButton, clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sleeping_layout);
-
-        Intent intent = getIntent();
-        startTime = intent.getLongExtra("시작", 0) / 1000;
-        endTime = intent.getLongExtra("종료", 0) / 1000;
-        SleepTime = intent.getLongExtra("수면", 0);
-
-        String a = String.valueOf(startTime);
-        String b = String.valueOf(SleepTime);
-        String c = String.valueOf(endTime);
-        Log.d("startTime : "+ a, "sleepTime = " + b);
-        Log.d( "endTime = ", c);
-
-
-        sleepTimes = new ArrayList<>();
+        setContentView(R.layout.graph_layout);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
        lineChart = findViewById(R.id.sleepChart);
-       sleepData = new SleepData();
+       graphData = new GraphData();
        stopButton = (Button)findViewById(R.id.stopButton);
        clearButton = (Button)findViewById(R.id.clearButton);
 
@@ -95,7 +73,7 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
                LineData emptyLineData = new LineData(emptyDataSet);
                lineChart.setData(emptyLineData);
 
-               sleepData.RemoveDataEntry();
+               graphData.RemoveDataEntry();
 
                lineChart.setDescription(null); // 초기 설명(Description) 제거
                lineChart.invalidate();
@@ -137,11 +115,11 @@ public class SleepActivity extends AppCompatActivity implements SensorEventListe
                 float y = event.values[1];
                 float z = event.values[2];
 
-                sleepData.setAccelerometerData(x, y, z);
-                sleepData.addDataEntry(x);
+                graphData.setAccelerometerData(x, y, z);
+                graphData.addDataEntry(x);
 
                 LineDataSet dataSet = (LineDataSet) lineChart.getData().getDataSetByIndex(0);
-                dataSet.setValues(sleepData.getEntries());
+                dataSet.setValues(graphData.getEntries());
                 lineChart.getData().notifyDataChanged();
                 lineChart.notifyDataSetChanged();
 

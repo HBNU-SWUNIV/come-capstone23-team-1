@@ -1,33 +1,22 @@
 package com.example.project;
 
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.hardware.*;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     Button Graph, Memo, Calendar;
     private Chronometer chronometer;
-
-    private long startTime;
-    private long endTime;
-    private long sleepTime;
 
     private long pauseOffset;
     private boolean running;
@@ -73,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Graph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SleepActivity.class);
+                Intent intent = new Intent(MainActivity.this, GraphActivity.class);
                 startActivity(intent);
             }
         });
@@ -104,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
             running = true;
-            startTime = System.currentTimeMillis();
         }
     }
 
@@ -113,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
             chronometer.stop();
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
-            endTime = System.currentTimeMillis();
-            sleepTime = (endTime - startTime) / 1000;
         }
     }
 
