@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         chronometer = findViewById(R.id.chronometer);
 
-        Graph = (Button)findViewById(R.id.GraphButton);
+      //  Graph = (Button)findViewById(R.id.GraphButton); 가속도 센서
         Memo = (Button)findViewById(R.id.MemoButton);
         Calendar = (Button)findViewById(R.id.CalendarButton);
 
@@ -59,13 +59,16 @@ public class MainActivity extends AppCompatActivity {
         chronometer.setBase(SystemClock.elapsedRealtime());
         chronometer.setText("00:00:00");
 
-        Graph.setOnClickListener(new View.OnClickListener() {
+       /* Graph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, GraphActivity.class);
                 startActivity(intent);
             }
         });
+
+
+        */
 
         Memo.setOnClickListener(new View.OnClickListener() {
             @Override
