@@ -29,7 +29,10 @@
 
   
 ## Conclusion
-  - ### 화면
+  - ### 시연
+  ![메인 화면](https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/d9d7d11e-fb36-40e2-bba9-dfe2d3e16911)
+  ![달력_일정](https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/9a8f0fb8-ccdb-4998-b236-a8afef41e521)
+  ![메모_삭제](https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/0f0e5de5-0d05-433e-a122-b861c0706e37)
 
   - ### 기대 효과
      - 이 앱을 통해서 중요한 사항을 메모로 작성할 수 있고, 작성된 날짜와 시간을 알 수 있기에 시간이 지나서 망각하더라도 메모를 보고 잊어버렸던 일을 다시 할 수 있도록 동기를 부여
