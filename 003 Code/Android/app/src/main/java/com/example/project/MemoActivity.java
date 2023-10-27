@@ -1,6 +1,5 @@
 package com.example.project;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,26 +16,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -46,22 +42,16 @@ class MemoItem {
     public String memo;
     public String regDate;
 
-    public MemoItem(String category, String memo) {
-
-        // 날짜를 표시하기 위한 포멧터를 생성. 년-월-일 시:분:초를 표시하는 포맷을 작성한다.
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-
-        // 현재 날짜정보를 가진 Date객체를 생성한다.
-        Date date = new Date();
-
+    public MemoItem(String category, String memo, String regDate) {
         this.category = category;
         this.memo = memo;
 
         // 생성한 포맷터를 통해 현재 날짜 객체를 지정해서 새로운 포맷에 맞는 날짜정보를 regDate에 저장한다.
-        this.regDate = formatter.format(date);
-
+        this.regDate = regDate;
     }
 }
+
+
 
 class MemoListAdapter extends RecyclerView.Adapter<MemoListAdapter.ViewHolder> {
     private Context context;
@@ -195,7 +185,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void removeMemoItem(String category, String memo){
+    private void removeMemoItem(String category, String memo, String regDate){
         for(int i = 0; i < memoListAdapter.itemList.size(); i++){
             MemoItem item = memoListAdapter.itemList.get(i);
             if(item.category.equals(category) && item.memo.equals(memo)){
@@ -205,7 +195,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        deleteDataFromFile(category, memo);
+        deleteDataFromFile(category, memo, regDate);
     }
 
     private void DeleteMemoListItem(RecyclerView recyclerview){
@@ -228,7 +218,8 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
                     String category = deleteItem.category;
                     String memo = deleteItem.memo;
-                    removeMemoItem(category, memo);
+                    String regDate = deleteItem.regDate;
+                    removeMemoItem(category, memo, regDate);
                 }
             }
 
@@ -261,10 +252,11 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
         for (String line : lines) {
             String[] items = line.split(";");
-            if (items.length == 2) {
+            if (items.length == 3) {
                 String category = items[0].trim();
                 String memo = items[1].trim();
-                MemoItem item = new MemoItem(category, memo);
+                String regDate = items[2].trim();
+                MemoItem item = new MemoItem(category, memo, regDate);
                 list.add(item);
             }
         }
@@ -284,19 +276,26 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     private void registerMemo () {
         String category = (String) categorySpinner.getSelectedItem();
         String memo = memoEdit.getText().toString();
+        String regDate = getCurrentDate();
 
         if(TextUtils.isEmpty(memo)) {
             Toast.makeText(context, R.string.msg_memo_input, Toast.LENGTH_SHORT) .show();
             return;
         }
 
-        saveDataToFile(category, memo);
-        addMemoItem(category, memo);
+        saveDataToFile(category, memo, regDate);
+        addMemoItem(category, memo, regDate);
 
         categorySpinner.setSelection(0);
         memoEdit.setText("");
 
         hideKeyboard();
+    }
+
+    public String getCurrentDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
+        Date date = new Date();
+        return formatter.format(date);
     }
 
     // 키패드 숨기기 메서드
@@ -310,18 +309,26 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     }
 
     // 아이템을 어댑터에 추가하는 매서드
-    private void addMemoItem(String category, String memo) {
-        MemoItem item = new MemoItem(category, memo);
+    private void addMemoItem(String category, String memo, String regDate) {
+        MemoItem item = new MemoItem(category, memo, regDate);
 
         memoListAdapter.addItem(item);
     }
 
-    private void saveDataToFile(String category, String memo) {
-        File file = new File(getFilesDir(), "saveFile.txt");
-        FileOutputStream fos = null;
+    // 파일 경로 상수
+    private static final String FILE_NAME = "memo_data.txt";
+
+    // 파일 경로를 얻는 메서드
+    private File getDataFile() {
+        return new File(getFilesDir(), FILE_NAME);
+    }
+
+
+    private void saveDataToFile(String category, String memo, String regDate) {
+        File file = getDataFile();
         try {
-            fos = new FileOutputStream(file, true);
-            String data = category + ";" + memo + System.getProperty("line.separator");
+            FileOutputStream fos = new FileOutputStream(file, true);
+            String data = category + ";" + memo + ";" + regDate + System.getProperty("line.separator");
             fos.write(data.getBytes());
             // 저장 완료 메시지 등의 처리
             Log.d("저장:", "저장 완료!!");
@@ -329,19 +336,11 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
             // 저장 실패 처리
             Log.e("SaveDataToFile", "Error saving data: " + e.getMessage());
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
     private String loadDataFromFile() {
-        File file = new File(getFilesDir(), "saveFile.txt");
+        File file = getDataFile();
         if (!file.exists()) {
             Log.d("LoadDataFromFile", "File does not exist.");
             return null;
@@ -371,8 +370,8 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private void deleteDataFromFile(String category, String memo) {
-        File file = new File(getFilesDir(), "saveFile.txt");
+    private void deleteDataFromFile(String category, String memo, String regDate) {
+        File file = getDataFile();
         if (!file.exists()) {
             Log.d("deleteDataFromFile", "File does not exist.");
             return;
@@ -390,10 +389,11 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
 
             while ((line = reader.readLine()) != null) {
                 String[] items = line.split(";");
-                if (items.length == 2) {
+                if (items.length == 3) {
                     String storedCategory = items[0].trim();
                     String storedMemo = items[1].trim();
-                    if (!storedCategory.equals(category) || !storedMemo.equals(memo)) {
+                    String storedRegDate = items[2].trim();
+                    if (!storedCategory.equals(category) || !storedMemo.equals(memo) || !storedRegDate.equals(regDate)) {
                         updatedData.append(line).append(System.getProperty("line.separator"));
                     }
                 }
