@@ -31,7 +31,7 @@
 ## Conclusion
   - ### 시연
   <img src = "https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/d9d7d11e-fb36-40e2-bba9-dfe2d3e16911"  width="400" height="350">
-  <img src = "(https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/9a8f0fb8-ccdb-4998-b236-a8afef41e521"  width="400" height="350">
+  <img src = "https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/9a8f0fb8-ccdb-4998-b236-a8afef41e521"  width="400" height="350">
   <img src = "https://github.com/HBNU-SWUNIV/come-capstone23-team-1/assets/64230151/0f0e5de5-0d05-433e-a122-b861c0706e37"  width="400" height="350">
 
   - ### 기대 효과
