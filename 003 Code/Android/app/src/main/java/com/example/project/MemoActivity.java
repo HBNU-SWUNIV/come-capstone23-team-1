@@ -188,7 +188,7 @@ public class MemoActivity  extends AppCompatActivity implements View.OnClickList
     private void removeMemoItem(String category, String memo, String regDate){
         for(int i = 0; i < memoListAdapter.itemList.size(); i++){
             MemoItem item = memoListAdapter.itemList.get(i);
-            if(item.category.equals(category) && item.memo.equals(memo)){
+            if(item.category.equals(category) && item.memo.equals(memo) && item.memo.equals(regDate)){
                 memoListAdapter.itemList.remove(i);
                 memoListAdapter.notifyItemRemoved(i);
                 break;
