@@ -22,8 +22,8 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="도우미 앱"
+        android:icon="@drawable/schedule"
+        android:label="S-Care"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project"
         tools:targetApi="31">
